@@ -40,5 +40,5 @@ def handle_message(event):
     r=requests.get(API, headers={"authorization":TOKEN})
     get_message = event.message.text
     # Send To Line
-    reply = TextSendMessage(text=r.text)
+    reply = TextSendMessage(text=f"AAAAA")
     line_bot_api.reply_message(event.reply_token, reply)
