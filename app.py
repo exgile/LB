@@ -1,6 +1,6 @@
 import os
-from datetime import datetime
-
+from datetime import datetime,date,timezone,timedelta
+import requests
 from flask import Flask, abort, request
 
 # https://github.com/line/line-bot-sdk-python
@@ -33,8 +33,12 @@ def callback():
 
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
+    response = requests.post('https://ncutcbpapi.ncut.edu.tw/api/login', json={"userId":"A0401","password":"04850"})
+    response_Json = response.json()
+    API = "https://ncutcbpapi.ncut.edu.tw/api/codes/A0401/"+ datetime.utcnow().replace(tzinfo=timezone.utc).astimezone(timezone(timedelta(hours=8))).strftime("%Y-%m-%d")
+    TOKEN = "bearer "+response_Json['token']
+    r=requests.get(API, headers={"authorization":TOKEN})
     get_message = event.message.text
-
     # Send To Line
-    reply = TextSendMessage(text=f"AAAAA")
+    reply = TextSendMessage(text=r.text)
     line_bot_api.reply_message(event.reply_token, reply)
